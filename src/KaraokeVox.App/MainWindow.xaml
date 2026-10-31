@@ -1,0 +1,594 @@
+﻿<Window x:Class="KaraokeVox.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:KaraokeVox.App.Controls"
+        Title="Tomaoke"
+        Width="1280"
+        Height="900"
+        MinWidth="980"
+        MinHeight="720"
+        Background="#0E1016"
+        Foreground="#F4F1EA"
+        FontFamily="Segoe UI"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="Section" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#8B93A7" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+        <Style x:Key="Label" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#8B93A7" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0,14,0,4" />
+        </Style>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="#171B26" />
+            <Setter Property="BorderBrush" Value="#2A3144" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#2A3144" />
+            <Setter Property="Foreground" Value="#F4F1EA" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="20,0" />
+            <Setter Property="MinHeight" Value="40" />
+            <Setter Property="MinWidth" Value="88" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Face"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="20"
+                                MinHeight="{TemplateBinding MinHeight}"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Face" Property="Opacity" Value="0.88" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Face" Property="Opacity" Value="0.72" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Face" Property="Opacity" Value="0.4" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="PlayButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#F2C14E" />
+            <Setter Property="Foreground" Value="#1A1408" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="MinWidth" Value="112" />
+            <Setter Property="Padding" Value="24,0" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="#12141A" />
+            <Setter Property="Background" Value="#F7F4EE" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="Row" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter TextElement.Foreground="{TemplateBinding Foreground}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Row" Property="Background" Value="#F2C14E" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#222838" />
+            <Setter Property="Foreground" Value="#F4F1EA" />
+            <Setter Property="BorderBrush" Value="#3A4258" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="MaxDropDownHeight" Value="280" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Focusable="False" ClickMode="Press"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Background="{TemplateBinding Background}"
+                                          BorderBrush="{TemplateBinding BorderBrush}">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="6"
+                                                Padding="10,8">
+                                            <TextBlock Text="▾" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#A8B0C2" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <ContentPresenter Margin="12,8,28,8" IsHitTestVisible="False" VerticalAlignment="Center"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              TextElement.Foreground="#F4F1EA" />
+                            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                <Border Background="#F7F4EE" BorderBrush="#3A4258" BorderThickness="1" CornerRadius="6"
+                                        MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                        MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <ItemsPresenter />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#222838" />
+            <Setter Property="Foreground" Value="#F4F1EA" />
+            <Setter Property="BorderBrush" Value="#3A4258" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="CaretBrush" Value="#F4F1EA" />
+        </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="#12151E" />
+            <Setter Property="Foreground" Value="#F4F1EA" />
+            <Setter Property="BorderBrush" Value="#2A3144" />
+        </Style>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="Foreground" Value="#F4F1EA" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#2A3144" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="ProgressBar">
+            <Setter Property="Foreground" Value="#4ADE80" />
+            <Setter Property="Background" Value="#222838" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Height" Value="6" />
+        </Style>
+        <Style TargetType="Slider">
+            <Setter Property="Foreground" Value="#F2C14E" />
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="Margin" Value="0,2,0,8" />
+        </Style>
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Border Background="#171B26" CornerRadius="24" Padding="6,4" HorizontalAlignment="Left" Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal" IsItemsHost="True" />
+                            </Border>
+                            <ContentPresenter Grid.Row="1" ContentSource="SelectedContent" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TabItem">
+            <Setter Property="Foreground" Value="#A8B0C2" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="18,0" />
+            <Setter Property="MinHeight" Value="40" />
+            <Setter Property="MinWidth" Value="88" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="Pill" Background="{TemplateBinding Background}" CornerRadius="20" Padding="{TemplateBinding Padding}" MinHeight="40">
+                            <ContentPresenter x:Name="Label" ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Pill" Property="Background" Value="#2A3144" />
+                                <Setter TargetName="Label" Property="TextElement.Foreground" Value="#F4F1EA" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Pill" Property="Background" Value="#F2C14E" />
+                                <Setter TargetName="Label" Property="TextElement.Foreground" Value="#1A1408" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#F4F1EA" />
+            <Setter Property="Margin" Value="0,10,0,0" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="340" MinHeight="220" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" MinWidth="160" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" MinWidth="160" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock FontSize="13" Foreground="#F2C14E" FontWeight="SemiBold" Text="TOMAOKE" />
+                <TextBlock x:Name="SongTitle" FontSize="22" FontWeight="SemiBold" Text="No song loaded" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource Label}" Margin="0,0,0,2" Text="Microphone" />
+                <ComboBox x:Name="InputDevice" />
+            </StackPanel>
+            <StackPanel Grid.Column="4" VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource Label}" Margin="0,0,0,2" Text="Output" />
+                <ComboBox x:Name="OutputDevice" />
+            </StackPanel>
+            <Button x:Name="MonitorButton" Grid.Column="6" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,1" MinWidth="110" Content="Start" />
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="VideoRow" Height="0" MinHeight="0" MaxHeight="0" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" MinHeight="120" />
+            </Grid.RowDefinitions>
+            <Border x:Name="StageEmpty" Grid.RowSpan="3" Style="{StaticResource Card}">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" Text="Ready to sing" />
+                    <TextBlock Margin="0,8,0,0" Foreground="#8B93A7" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="460"
+                               Text="Load a song, press Play, and the lyrics plus the green lead line show up here." />
+                </StackPanel>
+            </Border>
+            <Border x:Name="VideoCard" Style="{StaticResource Card}" Padding="0" Margin="0,0,0,4" Visibility="Collapsed" ClipToBounds="True">
+                <Grid x:Name="VideoHost">
+                    <Border x:Name="VideoDockHint" Visibility="Collapsed" Padding="14,10">
+                        <DockPanel>
+                            <Button x:Name="DockVideoButton" DockPanel.Dock="Right" Margin="12,0,0,0" MinHeight="36" Content="Dock" />
+                            <TextBlock VerticalAlignment="Center" Foreground="#A8B0C2" TextWrapping="Wrap"
+                                       Text="The video is in its own window. Drag that window's edges to resize it." />
+                        </DockPanel>
+                    </Border>
+                    <controls:VideoSurface x:Name="VideoSurface" />
+                </Grid>
+            </Border>
+            <GridSplitter x:Name="VideoSplitter" Grid.Row="1" Height="16" Margin="0,0,0,8"
+                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                          ResizeDirection="Rows" ResizeBehavior="PreviousAndNext"
+                          ShowsPreview="False" Cursor="SizeNS" Visibility="Collapsed"
+                          Background="Transparent">
+                <GridSplitter.Template>
+                    <ControlTemplate TargetType="GridSplitter">
+                        <Border Background="Transparent">
+                            <Border Width="72" Height="6" CornerRadius="3" Background="#3A4258"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </GridSplitter.Template>
+            </GridSplitter>
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" MinHeight="120" />
+                </Grid.RowDefinitions>
+                <Border x:Name="LyricCard" Style="{StaticResource Card}" Margin="0,0,0,12" Visibility="Collapsed">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock x:Name="PrevLyric" FontSize="16" Foreground="#6E7689" TextWrapping="Wrap" />
+                        <TextBlock x:Name="CurrentLyric" FontSize="34" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,6,0,6" />
+                        <TextBlock x:Name="NextLyric" FontSize="18" Foreground="#8B93A7" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+                <Border x:Name="PitchRibbonCard" Grid.Row="1" Style="{StaticResource Card}" Visibility="Collapsed">
+                    <DockPanel>
+                        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                            <TextBlock x:Name="PitchText" DockPanel.Dock="Right" FontSize="16" VerticalAlignment="Center" Text="Pitch  —" />
+                            <StackPanel>
+                                <TextBlock FontWeight="SemiBold" Text="Lead vs you" />
+                                <TextBlock Foreground="#8B93A7" FontSize="12" Text="Green lead · gold on pitch · blue flat · red sharp" />
+                            </StackPanel>
+                        </DockPanel>
+                        <controls:PitchRibbonControl x:Name="PitchRibbon" Height="180" />
+                    </DockPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Row="2" Style="{StaticResource Card}" Margin="0,12,0,12" Padding="14,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="280" />
+                </Grid.ColumnDefinitions>
+                <Button x:Name="PlayButton" Style="{StaticResource PlayButton}" VerticalAlignment="Center" IsEnabled="False" Content="Play" />
+                <StackPanel Grid.Column="1" Margin="16,0">
+                    <Slider x:Name="Seek" />
+                    <DockPanel Margin="0,4,0,0">
+                        <TextBlock x:Name="TimeText" DockPanel.Dock="Right" Foreground="#A8B0C2" Text="0:00 / 0:00" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Foreground="#8B93A7" Text="Mic" Margin="0,0,8,0" />
+                            <ProgressBar x:Name="MicMeter" Width="90" Maximum="100" Margin="0,0,14,0" />
+                            <TextBlock Foreground="#8B93A7" Text="Out" Margin="0,0,8,0" />
+                            <ProgressBar x:Name="OutMeter" Width="90" Maximum="100" />
+                        </StackPanel>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                    <DockPanel>
+                        <TextBlock x:Name="StrengthValue" DockPanel.Dock="Right" Width="44" TextAlignment="Right" Text="0%" />
+                        <TextBlock Foreground="#8B93A7" Text="Match lead" />
+                    </DockPanel>
+                    <Slider x:Name="Strength" Maximum="100" ToolTip="100% replaces your pitch with the lead vocal at this moment. 0% is your dry voice." />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <TabControl Grid.Row="3">
+            <TabItem Header="Song">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,8,0,0">
+                <Border Style="{StaticResource Card}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="24" />
+                            <ColumnDefinition Width="280" MinWidth="220" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" MinWidth="140" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Button x:Name="LoadFileButton" Content="Load file" />
+                                <TextBox x:Name="YouTubeBox" Grid.Column="1" MinHeight="40" Margin="0,0,8,0" VerticalContentAlignment="Center" ToolTip="YouTube URL" />
+                                <Button x:Name="FetchButton" Grid.Column="2" Margin="0" Content="Fetch" />
+                            </Grid>
+                            <TextBlock x:Name="PrepText" Margin="0,8,0,0" TextWrapping="Wrap" Foreground="#A8B0C2"
+                                       Text="Load a song to tune toward its lead vocal." />
+                            <TextBlock Style="{StaticResource Label}" Text="Song key" />
+                            <DockPanel>
+                                <TextBlock x:Name="SongShiftValue" DockPanel.Dock="Right" Width="36" TextAlignment="Right" Text="0" />
+                                <Slider x:Name="SongShift" Minimum="-3" Maximum="3" TickFrequency="1" IsSnapToTickEnabled="True"
+                                        ToolTip="Shifts the track and the lead line together. Tempo stays put." />
+                            </DockPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Style="{StaticResource Section}" Text="Recent YouTube" />
+                            <ListBox x:Name="RecentYouTubeList" Height="110" Margin="0,0,0,12" DisplayMemberPath="Title" />
+                            <Button x:Name="LoadRecentYouTubeButton" Margin="0" HorizontalAlignment="Left" Content="Load selected" IsEnabled="False" />
+                        </StackPanel>
+                        <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0,16,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="112" />
+                            </Grid.RowDefinitions>
+                            <Grid Margin="0,0,0,8">
+                                <TextBlock Text="Playlist" FontSize="13" FontWeight="SemiBold" Foreground="#8B93A7" VerticalAlignment="Center" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button x:Name="PlaylistPlayButton" Content="Play now" />
+                                    <Button x:Name="PlaylistRemoveButton" Content="Remove" />
+                                    <Button x:Name="PlaylistClearButton" Margin="0" Content="Clear" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Grid.Row="1" Margin="0,0,0,8" Foreground="#8B93A7" TextWrapping="Wrap"
+                                       Text="Drop YouTube links here. The next songs prepare while this one plays." />
+                            <Border x:Name="PlaylistDrop" Grid.Row="2" AllowDrop="True" Background="#12151E"
+                                    BorderBrush="#2A3144" BorderThickness="1" CornerRadius="12" Padding="4">
+                                <Grid>
+                                    <ListBox x:Name="PlaylistList" AllowDrop="True" Background="Transparent" BorderThickness="0"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                <Setter Property="Padding" Value="8,6" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ToolTip="{Binding Detail}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="132" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,12,0" />
+                                                    <TextBlock Grid.Column="1" Text="{Binding Status}" TextTrimming="CharacterEllipsis"
+                                                               Foreground="#8B93A7" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                    <TextBlock x:Name="PlaylistEmpty" IsHitTestVisible="False" Margin="12,10,12,0"
+                                               HorizontalAlignment="Left" VerticalAlignment="Top"
+                                               Foreground="#8B93A7" Text="Drop YouTube links" />
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Border>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Tune">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,8,0,0">
+                <Border Style="{StaticResource Card}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Label}" Margin="0" Text="Retune speed (ms)" />
+                            <DockPanel>
+                                <TextBlock x:Name="RetuneValue" DockPanel.Dock="Right" Width="40" TextAlignment="Right" Text="40" />
+                                <Slider x:Name="Retune" Maximum="200" Value="40" />
+                            </DockPanel>
+                            <TextBlock Style="{StaticResource Label}" Text="Mode" />
+                            <ComboBox x:Name="ModeBox" />
+                            <TextBlock Style="{StaticResource Label}" Text="Key" />
+                            <ComboBox x:Name="KeyBox" />
+                            <TextBlock Style="{StaticResource Label}" Text="Scale" />
+                            <ComboBox x:Name="ScaleBox" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Style="{StaticResource Label}" Margin="0" Text="Voice" />
+                            <ComboBox x:Name="VoiceBox" />
+                            <TextBlock Style="{StaticResource Label}" Text="Preset" />
+                            <ComboBox x:Name="PresetBox" />
+                            <TextBlock Style="{StaticResource Label}" Text="Harmony" />
+                            <DockPanel>
+                                <TextBlock x:Name="HarmonyValue" DockPanel.Dock="Right" Width="40" TextAlignment="Right" Text="0%" />
+                                <Slider x:Name="Harmony" Maximum="100" />
+                            </DockPanel>
+                            <TextBlock Style="{StaticResource Label}" Text="Double" />
+                            <DockPanel>
+                                <TextBlock x:Name="DoubleValue" DockPanel.Dock="Right" Width="40" TextAlignment="Right" Text="0%" />
+                                <Slider x:Name="DoubleMix" Maximum="100" />
+                            </DockPanel>
+                            <CheckBox x:Name="TuneBypass" Content="Bypass tuning" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Mix">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,8,0,0">
+                <Border Style="{StaticResource Card}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Label}" Margin="0" Text="Gate (dB)" />
+                            <DockPanel>
+                                <TextBlock x:Name="GateValue" DockPanel.Dock="Right" Width="40" TextAlignment="Right" />
+                                <Slider x:Name="Gate" Minimum="-60" Maximum="-12" Value="-46" />
+                            </DockPanel>
+                            <TextBlock Style="{StaticResource Label}" Text="Echo delay (ms)" />
+                            <DockPanel>
+                                <TextBlock x:Name="EchoDelayValue" DockPanel.Dock="Right" Width="40" TextAlignment="Right" />
+                                <Slider x:Name="EchoDelay" Minimum="40" Maximum="500" Value="180" />
+                            </DockPanel>
+                            <TextBlock Style="{StaticResource Label}" Text="Echo feedback" />
+                            <DockPanel>
+                                <TextBlock x:Name="EchoFeedbackValue" DockPanel.Dock="Right" Width="40" TextAlignment="Right" />
+                                <Slider x:Name="EchoFeedback" Maximum="80" Value="30" />
+                            </DockPanel>
+                            <TextBlock Style="{StaticResource Label}" Text="Echo mix" />
+                            <DockPanel>
+                                <TextBlock x:Name="EchoMixValue" DockPanel.Dock="Right" Width="40" TextAlignment="Right" />
+                                <Slider x:Name="EchoMix" Maximum="100" />
+                            </DockPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Style="{StaticResource Label}" Margin="0" Text="Reverb size" />
+                            <DockPanel>
+                                <TextBlock x:Name="ReverbSizeValue" DockPanel.Dock="Right" Width="40" TextAlignment="Right" />
+                                <Slider x:Name="ReverbSize" Maximum="100" Value="45" />
+                            </DockPanel>
+                            <TextBlock Style="{StaticResource Label}" Text="Reverb mix" />
+                            <DockPanel>
+                                <TextBlock x:Name="ReverbMixValue" DockPanel.Dock="Right" Width="40" TextAlignment="Right" />
+                                <Slider x:Name="ReverbMix" Maximum="100" Value="18" />
+                            </DockPanel>
+                            <TextBlock Style="{StaticResource Label}" Text="Mic gain" />
+                            <DockPanel>
+                                <TextBlock x:Name="MicGainValue" DockPanel.Dock="Right" Width="48" TextAlignment="Right" />
+                                <Slider x:Name="MicGain" Maximum="200" Value="100" />
+                            </DockPanel>
+                            <TextBlock Style="{StaticResource Label}" Text="Music" />
+                            <DockPanel>
+                                <TextBlock x:Name="MusicGainValue" DockPanel.Dock="Right" Width="48" TextAlignment="Right" />
+                                <Slider x:Name="MusicGain" Maximum="100" Value="85" />
+                            </DockPanel>
+                            <TextBlock Style="{StaticResource Label}" Text="Guide vocal" />
+                            <DockPanel>
+                                <TextBlock x:Name="GuideGainValue" DockPanel.Dock="Right" Width="48" TextAlignment="Right" />
+                                <Slider x:Name="GuideGain" Maximum="100" />
+                            </DockPanel>
+                            <TextBlock Style="{StaticResource Label}" Text="Master" />
+                            <DockPanel>
+                                <TextBlock x:Name="MasterGainValue" DockPanel.Dock="Right" Width="48" TextAlignment="Right" />
+                                <Slider x:Name="MasterGain" Maximum="100" Value="90" />
+                            </DockPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Sync">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,8,0,0">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel MaxWidth="640" HorizontalAlignment="Left">
+                        <TextBlock Style="{StaticResource Label}" Margin="0" Text="Sync trim (ms)" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" MinWidth="160" />
+                                <ColumnDefinition Width="48" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Slider x:Name="SyncTrim" Minimum="-400" Maximum="250" TickFrequency="10" Margin="0,6,8,0" />
+                            <TextBlock x:Name="SyncValue" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Right" Text="0" />
+                            <Button x:Name="SyncTapButton" Grid.Column="2" Margin="12,0,0,0" Content="Tap sync" />
+                        </Grid>
+                        <TextBlock x:Name="SyncHint" Margin="0,8,0,0" TextWrapping="Wrap" Foreground="#A8B0C2" />
+                    </StackPanel>
+                </Border>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <TextBlock x:Name="StatusText" Grid.Row="4" Margin="4,10,0,0" TextWrapping="Wrap" Foreground="#8B93A7"
+                   Text="Choose the USB mic and either the headphone jack or a Bluetooth speaker." />
+    </Grid>
+</Window>
